@@ -1,0 +1,14 @@
+.body-bg{
+	background-image: url(../img/bgair.JPG);
+}
+
+.white-bg{
+	width: 70%;
+	background-color: #fff;
+	margin: 0 auto; 
+}
+
+.align-center{
+	text-align: center;
+}
+
