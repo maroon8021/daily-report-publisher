@@ -2,16 +2,92 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
-const $ = jQuery = require('./lib/jquery');
+!function(){
+  var checkbox = ('<p>'
+    +'<input type="checkbox" id="test5" />'
+    +'<label for="test5">Red</label>'
+    +'</p>')
+
+  $('#plan').append(checkbox);
+}
+
 const remote = require('electron').remote;
 const {dialog} = require('electron').remote;
 const {BrowserWindow} = require('electron').remote;
 var fs = require('fs');
 
-$('#console').on('click',function(){
-	console.log("Before Fine")
-	console.log("Fine")
-})
+/* Status */
+var $focused_ = null;
+var isFocus_ = null;
+
+/* $elements  */
+
+var dom = ('<div class="input-field col s10">'
+    +'<input id="last_name" type="text" class="validate input-element last_input">'
+    +'<label for="last_name">予定</label>'
+    +'</div>');
+
+var clearIcon = ('<div class="col s2 clear-icon">'
+    +'<i class="small material-icons">clear</i>'
+    +'</div>');
+
+/****/
+
+
+
+/****/
+
+$('#append').on('click',function(){
+  var dom = ('<div class="input-field col s10">'
+    +'<input id="last_name" type="text" class="validate input-element last_input">'
+    +'<label for="last_name">Last Name</label>'
+    +'</div>')
+  var checkbox = ('<p>'
+    +'<input type="checkbox" id="test5" />'
+    +'<label for="test5">Red</label>'
+    +'</p>')
+  $('#plan').append(dom);
+  $('#plan').append(checkbox);
+  //.trigger('create')
+});
+
+$('#plan').on('keydown','.last_input',function(e){
+  if(e.keyCode === 13) {
+    $('#plan').append(dom);
+    $(this).removeClass('last_input');
+  }
+  });
+
+$(document).on('click',function(e){
+  var $targetElement = e.target.parentElement;
+  if($($targetElement).hasClass('clear-icon')){
+    $($focused_).remove();
+    removeCancelIcon();
+  }else if(isFocus_ && !$($targetElement).hasClass('input-field')){
+    removeCancelIcon();
+    return;
+  }else if(!isFocus_){
+    return;
+  }
+  });
+
+$('#plan').on('focus','.input-element',function(e){
+  
+  if(isFocus_){
+    removeCancelIcon()
+  }　　　
+
+  var $inputContainer = $(this).parent().parent();
+  $($inputContainer).append(clearIcon)
+  $focused_ = e.target.parentElement;
+  isFocus_ = true;
+});
+
+/*
+$('#plan').on('blur','.input-element',function(e){
+  $('.clear-icon').remove()
+});
+*/
 
 $('#click').on('click',function(){
 	var text = $('#textarea').val();
@@ -50,4 +126,20 @@ function writeFile(path, data) {
 }
 
 
-console.log("Here is debug")
+function removeCancelIcon(){
+  $('.clear-icon').remove();
+  isFocus_ = false;
+}
+
+/*
+TODO
+・バツボタン
+・Enterで行追加 -> EventBind
+・保存 -> 出力
+*/
+
+/*
+問題点
+blurが先に発火して、キャンセルボタンのイベントが発火しない
+blur -> focus-outを観測したい  
+*/
