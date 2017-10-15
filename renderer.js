@@ -19,6 +19,7 @@ var fs = require('fs');
 /* Status */
 var $focused_ = null;
 var isFocus_ = null;
+var lastPlanStatus = 3;
 
 /* $elements  */
 
@@ -29,6 +30,11 @@ var dom = ('<div class="input-field col s10">'
 
 var clearIcon = ('<div class="col s2 clear-icon">'
     +'<i class="small material-icons">clear</i>'
+    +'</div>');
+
+var doTextareaOrigin = ('<div class="input-field">'
+    +'<textarea id="textarea" class="materialize-textarea"></textarea>'
+    +'<label for="textarea1"></label>'
     +'</div>');
 
 /****/
@@ -72,7 +78,6 @@ $(document).on('click',function(e){
   });
 
 $('#plan').on('focus','.input-element',function(e){
-  
   if(isFocus_){
     removeCancelIcon()
   }　　　
@@ -83,11 +88,21 @@ $('#plan').on('focus','.input-element',function(e){
   isFocus_ = true;
 });
 
-/*
+
 $('#plan').on('blur','.input-element',function(e){
-  $('.clear-icon').remove()
+  var value = $(e.target).val();
+  if(value !== ""){
+    var id = e.targetElement.attr('id');
+    var textareaId = id + '-textarea'; 
+    var doTextarea = ('<div class="input-field">'
+    +'<textarea id="'+textareaId+'" class="materialize-textarea"></textarea>'
+    +'<label for="'+textareaId+'">'+textareaId+'</label>'
+    +'</div>');
+    $('#do').append(doTextarea);
+  }
+  
 });
-*/
+
 
 $('#click').on('click',function(){
 	var text = $('#textarea').val();
